@@ -49,7 +49,16 @@ class graph {
   }
 
   void remove_vertex(const VertexType &val) {
-    // TODO: Implementasikan!
+    if (!g.adjList[val].empty()) {
+      g.adjList[val].clear();
+      for(int i = 1; i < g.adjList.size(); ++i) {
+        if (g.adjList[i].empty()) continue;
+        auto it = std::find(g.adjList[i].begin(), g.adjList[i].end(), val);
+        if (it != g.adjList[i].end()) {
+          g.adjList[i].erase(it);
+        }
+      }
+    }
   }
 
   /**
@@ -59,7 +68,17 @@ class graph {
    * @param val2 nilai vertex 2
    */
   void add_edge(const VertexType &val1, const VertexType val2) {
-    // TODO: Implementasikan!
+    vector<int> &adj1 = g.adjList[val1], &adj2 = g.adjList[val2];
+    auto it = std::find(adj1.begin(), adj1.end(), val2);
+    if (it == adj1.end()) {
+      adj1.push_back(val2);
+      std::sort(adj1.begin(), adj1.end());
+    }
+    it = std::find(adj2.begin(), adj2.end(), val1);
+    if (it == adj2.end()) {
+      adj2.push_back(val1);
+      std::sort(adj2.begin(), adj2.end());
+    }
   }
 
   /**
@@ -68,7 +87,15 @@ class graph {
    * @param val nilai dari vertex yang akan dihapus
    */
   void remove_edge(const VertexType &val1, const VertexType &val2) {
-    // TODO: Implementasikan!
+    vector<int> &adj1 = g.adjList[val1], &adj2 = g.adjList[val2];
+    auto it = std::find(adj1.begin(), adj1.end(), val2);
+    if (it != adj1.end()) {
+      adj1.erase(it);
+    }
+    it = std::find(adj2.begin(), adj2.end(), val1);
+    if (it != adj2.end()) {
+      adj2.erase(it);
+    }
   }
 
   /**
@@ -103,7 +130,22 @@ class graph {
    */
   void bfs(const VertexType &root,
            std::function<void(const VertexType &)> func) const {
-    // TODO: Implementasikan!
+    vector<bool> visited(g.adjList.size(), false);
+    queue<int> queue;
+    queue.push(root);
+    visited[root] = true;
+    while (!queue.empty()) {
+      root = queue.front();
+      queue.pop();
+      for (auto i = g.adjList[root].begin();
+        i != g.adjList[root].end();
+        ++i) {
+       if (!visited[*i]) {
+        visited[*i] = true;
+        queue.push(*i);
+       }
+      }
+    }
   }
 
   /**
@@ -114,7 +156,26 @@ class graph {
    */
   void dfs(const VertexType &root,
            std::function<void(const VertexType &)> func) const {
-    // TODO: Implementasikan!
+    vector<bool> visited(g.adjList.size(), false);
+    stack<int> stack;
+    stack.push(root);
+    while (!stack.empty()) {
+      if(!visited[root]) {
+        visited[root] = true;
+      }
+      vector<int>::iterator i;
+      for (i = g.adjList[root].begin(); i != g.adjList[root].end(); ++i) {
+        if (!visited[*i]) {
+          root = *i;
+          stack.push(root);
+          break;
+        }
+      }
+      if (i == g.adjList[root].end()) {
+        root = stack.top();
+        stack.pop();
+      }
+    }
   }
 
  private:
