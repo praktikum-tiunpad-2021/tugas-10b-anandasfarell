@@ -3,7 +3,7 @@
 
 > Materi: Graph  
 > Pengajar: Asisten Praktikum 2021
-## NAMA - NPM
+## ANANDA SHAQUILLE FARELL - 140810200028
 
 **Harap untuk membaca instruksi terlebih dahulu sampai dipahami!**
 
